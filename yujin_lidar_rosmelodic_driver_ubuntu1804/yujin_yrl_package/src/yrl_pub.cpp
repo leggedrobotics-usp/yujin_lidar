@@ -88,12 +88,25 @@ int main(int argc, char **argv)
         return 1;
     }
     
+    /// initialize a node
+    ros::init(argc, argv, "yrl_pub");
+    
+    /// NodeHandle
+    ros::NodeHandle nh("~");
+
+    std::string calibration_file_path;
+    
     /// Using factory function, create a new YRL_Library object
     YRL_Library* instance = producing_func();
     /// Set LiDAR's IP address as an input IP address for driver
     instance->setInputIpAddress("192.168.1.250");
     /// Set LiDAR's Calibration File Path
-    instance->setCalibrationFilePath("/home/yourdirectory/lk_test.bin");
+    if (nh.getParam("/yrl_calibration_file_path", calibration_file_path))
+    {
+        instance->setCalibrationFilePath(calibration_file_path);
+    } else {
+        instance->setCalibrationFilePath("/home/yourdirectory/lk_test.bin");
+    }
     instance->start();
     
     /// Simple parameter set functions
@@ -106,12 +119,6 @@ int main(int argc, char **argv)
     instance->setMaxHorizontalAngle(135); /// default value of 135 (total 270 degrees of horizontal FOV)
     instance->setMinHorizontalAngle(-135); /// default value of -135 (total 270 degrees of horizontal FOV)
     instance->setCurrentFilterLevel(0.01); /// Default filter level is 0.01. Depending on user applications, this filter level may need to be adjusted.
-    
-    /// initialize a node
-    ros::init(argc, argv, "yrl_pub");
-    
-    /// NodeHandle
-    ros::NodeHandle nh("~");
 
     /// Publisher yrl_pub
     ros::Publisher yrl_pub = nh.advertise<sensor_msgs::PointCloud2>("yrl_cloud", 2);
