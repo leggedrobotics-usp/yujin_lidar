@@ -110,9 +110,9 @@ int main(int argc, char **argv)
     instance->start();
     
     /// Simple parameter set functions
-    instance->setSensorHeight(1.5); /// sensor at 1.5m height. The default height when the sensor is on ground is 0.07m
+    instance->setSensorHeight(0.00); /// sensor at 1.5m height. The default height when the sensor is on ground is 0.07m
     instance->setMaxRange(30); /// max range of 30m
-    instance->setUpperDataLimit(4); /// Data upper limit of 4 when the sensor is at 1.5m height
+    instance->setUpperDataLimit(5); /// Data upper limit of 4 when the sensor is at 1.5m height
     instance->setLowerDataLimit(-2); /// Data lower limit of -2 when the sensor is at 1.5m height
     instance->setMaxVerticalAngle(45); /// default value of 45 (total 90 degrees of vertical FOV)
     instance->setMinVerticalAngle(-45); /// default value of -45 (total 90 degrees of vertical FOV)
@@ -199,7 +199,7 @@ int main(int argc, char **argv)
         buffer_i.clear();
 
         /// Send Transform
-        br.sendTransform(tf::StampedTransform(transform, ros::Time::now(), "map", "yrl_cloud_id"));
+        br.sendTransform(tf::StampedTransform(transform, ros::Time::now(), "yrl_base", "yrl_cloud_id"));
         
         /// Error Check
         instance->getErrorCode(error_code_string);       
